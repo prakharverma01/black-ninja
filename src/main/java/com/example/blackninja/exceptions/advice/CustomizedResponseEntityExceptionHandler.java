@@ -4,6 +4,7 @@ import com.example.blackninja.Application;
 import com.example.blackninja.dtos.response.Errors;
 import com.example.blackninja.dtos.response.GenericResponse;
 import com.example.blackninja.exceptions.BadRequestException;
+import com.example.blackninja.exceptions.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,16 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         errList.add(err);
         GenericResponse<Object> genericResponse = new GenericResponse(null, "BAD_REQUEST_EXCEPTION", HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), errList);
         return new ResponseEntity(genericResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<GenericResponse<Object>> handleAllUnauthorizedExceptions(Exception exception, WebRequest webRequest) {
+        log.error("UnauthorizedException occurred =>", exception);
+        Errors err = new Errors(exception.getMessage(), HttpStatus.UNAUTHORIZED, webRequest.getContextPath());
+        List<Errors> errList = new ArrayList<>();
+        errList.add(err);
+
+        GenericResponse<Object> genericResponse = new GenericResponse("Unauthorized", "UNAUTHORIZED_EXCEPTION", HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), errList);
+        return new ResponseEntity(genericResponse, HttpStatus.UNAUTHORIZED);
     }
 }
