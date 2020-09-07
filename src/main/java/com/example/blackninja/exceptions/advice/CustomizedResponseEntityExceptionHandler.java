@@ -53,7 +53,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         List<Errors> errList = new ArrayList<>();
         errList.add(err);
 
-        GenericResponse<Object> genericResponse = new GenericResponse("Unauthorized", "UNAUTHORIZED_EXCEPTION", HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), errList);
+        GenericResponse<Object> genericResponse = new GenericResponse(null, "UNAUTHORIZED_EXCEPTION", HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), errList);
         return new ResponseEntity(genericResponse, HttpStatus.UNAUTHORIZED);
     }
 }
