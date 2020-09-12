@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByReference(String reference);
+
     @Query(value = " select u.* from users u, user_company_entitlement uce, companies c " +
         " where u.id = uce.user_id " +
         " and c.id = uce.company_id " +
