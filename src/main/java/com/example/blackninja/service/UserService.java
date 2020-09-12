@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -115,14 +117,21 @@ public class UserService {
                     fullName,
                     user.getEmail(),
                     user.getReference(),
-                    loginUserRole.label,
+                    Collections.singletonList(loginUserRole.label),
                     company.getCompanyName(),
                     1800,
+                    3600,
                     keyHelper
             );
             return auth;
         }
         throw new UnauthorizedException("You are unauthorized to access with email " + loginRequest.getEmail());
+    }
+
+    public User getUserByReferenceId(String refId) {
+        return userRepository.findByReference(refId).orElseThrow(
+                () -> new BadRequestException("User not found with reference " + refId)
+        );
     }
 
     private UserRoles getUserRole(LoginRequest loginRequest) {
@@ -151,18 +160,19 @@ public class UserService {
         return BCryptService.checkPassword(givenPassword, storedHasPassword);
     }
 
-    private String getAuthToken(
+    public String getAuthToken(
         String firstName,
         String lastName,
         String fullName,
         String email,
         String userReferenceId,
-        String role,
+        List<String> role,
         String partner,
         int accessTokenValiditySeconds,
+        int refreshTokenValidity,
         KeyHelper keyHelper
     ) {
-        AuthModel token = new AuthModel(firstName, lastName, fullName, email, userReferenceId, role, partner, accessTokenValiditySeconds);
+        AuthModel token = new AuthModel(firstName, lastName, fullName, email, userReferenceId, role, partner, accessTokenValiditySeconds, refreshTokenValidity);
         return token.toJson(keyHelper);
     }
 }
