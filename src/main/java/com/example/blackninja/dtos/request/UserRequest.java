@@ -1,5 +1,8 @@
 package com.example.blackninja.dtos.request;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class UserRequest {
     private String firstname;
     private String lastname;
