@@ -60,10 +60,10 @@ public class UserService {
 
     @Transactional
     private UserRegistrationResponse registerUser(UserRequest userRequest) {
-        String email = userRequest.getEmail();
+        String email = userRequest.getEmail().trim();
         // checks that email format is correct or not
         if(!GeneralUtils.verifyEmailString(email)) {
-            throw new BadRequestException("email "+ email +" is not a valid email");
+            throw new BadRequestException("email <"+ email +"> is not a valid email");
         }
         Optional<Company> companyOpt = companyRepository.findByCompanyNameIgnoreCase(userRequest.getCompanyName());
         //  checks if the given company is a valid company
